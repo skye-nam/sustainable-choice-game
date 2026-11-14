@@ -1,0 +1,1255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Making the Sustainable Choice the Easy One · CIV300 G13</title>
+<style>
+:root{
+  --bg:#040a17; --panel:#0d1a2d; --panel2:#14263f; --line:#27425f;
+  --ink:#eef8f6; --muted:#a9c0c6; --teal:#2dd4bf; --green:#4ade80; --red:#fb7185;
+  --accent:#2dd4bf;
+  --fs:clamp(17px,0.6vw + 13px,23px);
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:var(--fs)/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;overflow:hidden;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+h1,h2,h3,p{margin:0}
+:focus-visible{outline:3px solid #fff;outline-offset:2px}
+
+/* ---------- screens ---------- */
+.screen{position:fixed;inset:0;opacity:0;visibility:hidden;transform:scale(.985);
+  transition:opacity .45s ease,transform .45s ease,visibility 0s .45s;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.screen.active{opacity:1;visibility:visible;transform:none;transition:opacity .45s ease,transform .45s ease}
+.stars{background:
+  radial-gradient(1.5px 1.5px at 12% 22%,#fff9,transparent 60%),radial-gradient(1px 1px at 28% 71%,#fff8,transparent 60%),
+  radial-gradient(1.5px 1.5px at 44% 12%,#fff7,transparent 60%),radial-gradient(1px 1px at 61% 83%,#fff9,transparent 60%),
+  radial-gradient(2px 2px at 77% 31%,#fff6,transparent 60%),radial-gradient(1px 1px at 89% 64%,#fff8,transparent 60%),
+  radial-gradient(1px 1px at 7% 88%,#fff7,transparent 60%),radial-gradient(1.5px 1.5px at 52% 49%,#fff5,transparent 60%),
+  radial-gradient(1px 1px at 35% 38%,#fff6,transparent 60%),radial-gradient(1px 1px at 94% 9%,#fff8,transparent 60%),
+  radial-gradient(ellipse at 50% 120%,#0c3b4a 0%,transparent 60%),var(--bg)}
+
+/* ---------- HUD ---------- */
+#hud{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:10px 16px;padding-top:max(10px,env(safe-area-inset-top));
+  background:linear-gradient(#040a17f2,#040a17b0);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border-bottom:1px solid #ffffff14;transition:opacity .4s,transform .4s}
+#hud.off{opacity:0;transform:translateY(-100%);pointer-events:none}
+.stat{display:flex;align-items:baseline;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 16px;position:relative}
+.stat small{color:var(--muted);font-size:.72em;text-transform:uppercase;letter-spacing:.08em}
+.stat b{font-size:1.15em;font-variant-numeric:tabular-nums}
+#score{color:var(--teal)}
+.spacer{flex:1}
+.hbtn{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:.85em;min-height:42px}
+.hbtn:hover{border-color:var(--teal)}
+.hbtn[aria-pressed="true"]{background:#2dd4bf22;border-color:var(--teal)}
+#finish{background:var(--teal);color:#04201c;font-weight:700;border-color:transparent}
+#finish:disabled{background:var(--panel);color:#6f8790;border-color:var(--line);cursor:not-allowed}
+#finish:not(:disabled){animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 #2dd4bf88}50%{box-shadow:0 0 0 10px #2dd4bf00}}
+.float{position:fixed;z-index:30;font-weight:800;font-size:1.5em;color:var(--green);pointer-events:none;
+  text-shadow:0 2px 12px #000;animation:floatUp 1.3s ease-out forwards}
+@keyframes floatUp{0%{opacity:0;transform:translate(-50%,46px) scale(.7)}20%{opacity:1;transform:translate(-50%,26px) scale(1.15)}100%{opacity:0;transform:translate(-50%,-14px) scale(1)}}
+.bump{animation:bump .5s}
+@keyframes bump{40%{transform:scale(1.25)}}
+
+/* ---------- title ---------- */
+#s-title,#s-final{display:flex}
+.center{margin:auto;padding:28px 20px;max-width:900px;text-align:center}
+.orb{width:clamp(110px,22vmin,190px);aspect-ratio:1;border-radius:50%;margin:0 auto 26px;position:relative;
+  background:radial-gradient(circle at 32% 30%,#5eead4,#0e7490 45%,#0b2447 80%);
+  box-shadow:0 0 60px #2dd4bf66,inset -18px -18px 40px #0009;animation:bob 5s ease-in-out infinite}
+.orb::before,.orb::after{content:"";position:absolute;border-radius:50%;background:#34d39999}
+.orb::before{width:38%;height:30%;left:16%;top:22%;border-radius:60% 40% 55% 45%}
+.orb::after{width:30%;height:36%;left:54%;top:46%;border-radius:45% 55% 40% 60%}
+@keyframes bob{50%{transform:translateY(-10px)}}
+h1{font-size:clamp(1.7em,5.2vw,3.1em);line-height:1.12;letter-spacing:-.01em}
+h1 em{font-style:normal;color:var(--teal)}
+.pitch{color:var(--muted);font-size:1.12em;margin:18px auto 30px;max-width:34em}
+.btn{background:var(--accent);color:#04201c;border:0;border-radius:14px;padding:14px 30px;font-weight:750;font-size:1.05em;min-height:54px;
+  box-shadow:0 6px 24px #0006;transition:transform .15s,filter .15s}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line);box-shadow:none}
+.btnrow{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.fine{color:#7f99a1;font-size:.72em;margin-top:26px}
+kbd{border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:0 6px;font:inherit;font-size:.9em;background:var(--panel)}
+
+/* ---------- globe ---------- */
+#s-globe{overflow:hidden}
+#globe{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+#globe.grab{cursor:grabbing}#globe.point{cursor:pointer}
+#tip{position:absolute;z-index:5;pointer-events:none;background:#0d1a2df2;border:1px solid var(--line);border-radius:12px;padding:10px 14px;
+  transform:translate(-50%,calc(-100% - 26px));opacity:0;transition:opacity .15s;white-space:nowrap;font-size:.85em;box-shadow:0 8px 24px #000a}
+#tip.on{opacity:1}#tip b{display:block;font-size:1.1em}#tip span{color:var(--muted)}
+#dock{position:absolute;left:0;right:0;bottom:0;padding:10px 12px max(14px,env(safe-area-inset-bottom));text-align:center;
+  background:linear-gradient(transparent,#040a17e6 40%)}
+#hint{color:var(--muted);font-size:.82em;margin-bottom:8px}
+#chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.chip{background:var(--panel);border:2px solid var(--c,var(--line));border-radius:999px;padding:8px 16px;min-height:46px;font-size:.88em;display:flex;align-items:center;gap:8px}
+.chip:hover{background:var(--panel2)}
+.chip small{color:var(--muted)}
+.chip .ck{color:var(--green);font-weight:800}
+
+/* ---------- stage (cards) ---------- */
+.wrap{max-width:920px;margin:0 auto;padding:86px 14px 40px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:0 20px 60px #0009}
+.card.in{animation:cardIn .45s ease both}
+@keyframes cardIn{from{opacity:0;transform:translateY(18px)}}
+.banner{position:relative;height:clamp(120px,20vh,180px);overflow:hidden;
+  background:linear-gradient(135deg,var(--accent),#0d1a2d 130%);
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 70%,#0d1a2d),color-mix(in srgb,var(--accent) 18%,#0d1a2d))}
+.banner.sm{height:clamp(76px,11vh,104px)}
+.banner svg{position:absolute;inset:0;width:100%;height:100%}
+.banner .emo{position:absolute;left:0;right:0;bottom:8%;display:flex;justify-content:center;gap:.5em;font-size:clamp(2em,7vh,3.4em);filter:drop-shadow(0 4px 8px #0008)}
+.banner.sm .emo{font-size:clamp(1.5em,4.5vh,2.2em);justify-content:flex-end;padding-right:18px;bottom:14%}
+.banner .emo span:nth-child(2){animation:bob 4s ease-in-out infinite}
+.place{position:absolute;left:16px;top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tag{background:#04101fcc;border:1px solid #ffffff40;border-radius:999px;padding:3px 12px;font-size:.74em;font-weight:650;letter-spacing:.03em}
+.tag.topic{background:var(--accent);color:#04201c;border-color:transparent;text-transform:uppercase;letter-spacing:.08em}
+.body{padding:clamp(18px,3.2vw,36px)}
+.kicker{color:var(--accent);font-weight:750;font-size:.8em;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.dots{display:inline-flex;gap:5px}.dots i{width:22px;height:6px;border-radius:3px;background:var(--line)}.dots i.on{background:var(--accent)}
+h2{font-size:clamp(1.3em,3.2vw,1.85em);line-height:1.2;margin-bottom:14px}
+h3{font-size:1.1em;margin:20px 0 10px}
+.body p{margin-bottom:14px}
+.lead{font-size:1.1em}
+.situation{background:var(--panel2);border-left:5px solid var(--accent);border-radius:0 12px 12px 0;padding:12px 16px;margin-bottom:16px}
+.opts{display:grid;gap:10px;margin-top:6px}
+.opt{display:flex;gap:14px;align-items:center;width:100%;text-align:left;padding:14px 16px;border-radius:14px;border:2px solid var(--line);
+  background:var(--panel2);min-height:58px;transition:border-color .15s,transform .15s,background .15s}
+.opt:hover:not(:disabled){border-color:var(--accent);transform:translateX(4px)}
+.opt .n{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--accent);color:#04201c;font-weight:800}
+.opt:disabled{opacity:.4;cursor:not-allowed;text-decoration:line-through}
+.opt:disabled .n{background:var(--line);color:var(--muted)}
+.ribbon{display:flex;gap:12px;align-items:center;padding:12px 16px;border-radius:14px;margin-bottom:16px;font-weight:750;font-size:1.08em}
+.ribbon.good{background:#4ade8022;border:2px solid var(--green)}
+.ribbon.learn{background:#fbbf2420;border:2px solid #fbbf24}
+.ribbon .pts{margin-left:auto;color:var(--green);font-size:1.2em;white-space:nowrap}
+.pick{color:var(--muted);margin-bottom:12px}.pick b{color:var(--ink)}
+.box{background:var(--panel2);border-radius:14px;padding:14px 16px;margin-bottom:14px}
+.box h4{margin:0 0 4px;font-size:.78em;text-transform:uppercase;letter-spacing:.09em;color:var(--accent)}
+.actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:20px}
+.actions .key{color:var(--muted);font-size:.78em}
+.note{color:var(--muted);font-size:.78em;margin-top:10px}
+.src{display:none;margin-top:12px;border:1px dashed #fbbf2499;border-radius:12px;padding:10px 14px;font-size:.78em;color:#fde68a}
+body.notes .src{display:block}
+.retry{color:#fbbf24;font-weight:650;font-size:.85em}
+.outcome{margin:0 0 14px;border-radius:14px;overflow:hidden;border:2px solid #fbbf24;background:var(--panel2)}
+.outcome.good{border-color:var(--green)}
+.outcome svg{display:block;width:100%;height:auto;max-height:30vh}
+.outcome figcaption{padding:5px 14px;font-size:.7em;text-transform:uppercase;letter-spacing:.1em;font-weight:750;color:var(--muted)}
+.chipt{display:inline-block;font-size:.66em;border-radius:999px;padding:0 10px;font-weight:700;border:1.5px solid;white-space:nowrap;vertical-align:middle;text-transform:none;letter-spacing:0}
+.chipt.doc{color:var(--green)}.chipt.asm{color:#fbbf24}
+.concept{border-radius:16px;padding:16px 18px;margin:16px 0;background:var(--panel2);border-left:6px solid var(--teal)}
+.concept small{display:block;text-transform:uppercase;letter-spacing:.1em;font-size:.72em;color:var(--teal);font-weight:750}
+.concept h3{margin:2px 0 8px}.concept p{margin-bottom:8px}.concept p:last-child{margin-bottom:0}
+details.sources{margin-top:14px;font-size:.8em;color:var(--muted);border:1px solid var(--line);border-radius:12px;padding:8px 14px}
+details.sources summary{cursor:pointer;font-weight:650;color:var(--ink)}
+details.sources ul{margin:8px 0 4px;padding-left:1.2em}details.sources li{margin-bottom:4px}
+
+/* ---------- replay visuals ---------- */
+.change{border:2px dashed var(--accent);border-radius:14px;padding:12px 16px;margin:14px 0}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;scroll-margin-top:130px}
+.side{background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:14px;position:relative;overflow:hidden;min-width:0}
+.side.after{border-color:var(--accent)}
+.side h4{margin:0 0 10px;font-size:.86em}
+.side h4 span{display:inline-block;font-size:.8em;text-transform:uppercase;letter-spacing:.1em;padding:1px 10px;border-radius:999px;background:var(--line);margin-right:6px}
+.side.after h4 span{background:var(--accent);color:#04201c}
+.side .inner{transition:filter .6s,opacity .6s}
+.side.locked .inner{filter:blur(9px);opacity:.25}
+.side .lock{position:absolute;inset:0;display:none;place-items:center;text-align:center;font-weight:750;padding:20px}
+.side.locked .lock{display:grid}
+.grp{margin-top:12px}.grp:first-child{margin-top:0}
+.grp>b{display:block;font-size:.78em;color:var(--muted);margin-bottom:6px}
+.row{margin-bottom:8px}
+.row .lab{display:flex;justify-content:space-between;gap:8px;font-size:.8em;flex-wrap:wrap}
+.row .lab em{font-style:normal;font-weight:750}
+.bar{height:16px;border-radius:8px;background:#0007;overflow:hidden;margin-top:3px}
+.bar i{display:block;height:100%;width:0;border-radius:8px;background:var(--muted);transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.side.after .bar i{background:var(--accent)}
+.vt{display:inline-block;font-size:.72em;border-radius:999px;padding:0 9px;margin-top:4px;font-weight:650}
+.vt.ok{background:#4ade8026;color:var(--green)}.vt.no{background:#fb718526;color:var(--red)}
+.bins{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.bin{border:2px dashed var(--line);border-radius:12px;padding:6px;min-height:120px;text-align:center}
+.bin>b{display:block;font-size:.66em;color:var(--muted);line-height:1.2;margin-bottom:6px;min-height:2.4em}
+.item{display:inline-flex;flex-direction:column;align-items:center;width:3.3em;margin:2px;padding:3px 2px;border-radius:10px;background:#0005;border:2px solid transparent;position:relative;
+  font-size:.82em;animation:pop .45s cubic-bezier(.2,1.5,.4,1) both}
+.item span{font-size:1.5em;line-height:1.2}.item small{font-size:.6em;line-height:1.15;color:var(--muted)}
+.item.bad{border-color:var(--red);background:#fb718522}
+.item.bad::after{content:"✕";position:absolute;top:-8px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--red);color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center}
+@keyframes pop{from{opacity:0;transform:translateY(-22px) scale(.4)}}
+.tally{font-size:.8em;font-weight:700;margin-top:10px}.tally.ok{color:var(--green)}.tally.no{color:var(--red)}
+.chain{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:8px;align-items:stretch;margin:16px 0}
+.chain div{background:var(--panel2);border-radius:14px;padding:12px;border-top:4px solid var(--accent);animation:cardIn .5s both}
+.chain div:nth-child(3){animation-delay:.25s}.chain div:nth-child(5){animation-delay:.5s}
+.chain small{display:block;text-transform:uppercase;letter-spacing:.09em;font-size:.66em;color:var(--accent);font-weight:750;margin-bottom:4px}
+.chain .arr{background:none;border:0;padding:0;display:grid;place-items:center;font-size:1.5em;color:var(--accent);animation:none}
+.idea{border:2px solid var(--accent);border-radius:16px;padding:16px 18px;margin:16px 0;background:var(--panel2)}
+.idea small{display:block;text-transform:uppercase;letter-spacing:.1em;font-size:.72em;color:var(--accent);font-weight:750;margin-bottom:4px}
+.big{font-size:clamp(2.2em,7vw,3.6em);font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums;color:var(--accent)}
+.big small{font-size:.4em;color:var(--muted);font-weight:600}
+
+/* ---------- final ---------- */
+.rank{display:inline-block;margin:10px 0 6px;padding:8px 22px;border-radius:999px;background:linear-gradient(90deg,#2dd4bf,#4ade80);color:#04201c;font-weight:800;font-size:1.25em}
+.takes{list-style:none;padding:0;margin:22px auto;display:grid;gap:10px;text-align:left;max-width:760px}
+.takes li{background:var(--panel);border:1px solid var(--line);border-left:6px solid var(--c);border-radius:12px;padding:12px 16px;display:flex;gap:12px;align-items:center}
+.takes li span{font-size:1.5em}
+.home{font-size:1.15em;font-weight:650;max-width:30em;margin:0 auto 24px}
+.credits{color:var(--muted);font-size:.8em;margin-top:26px}
+
+@media (max-width:620px){
+  .cmp{grid-template-columns:1fr}
+  .chain{grid-template-columns:1fr}.chain .arr{transform:rotate(90deg)}
+  .stat{padding:5px 12px}.hbtn{padding:6px 11px}
+  .hbtn .lbl{display:none}
+  .wrap{padding-top:112px}
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
+</style>
+</head>
+<body>
+
+<header id="hud" class="off">
+  <div class="stat"><small>Score</small><b id="score">0</b></div>
+  <div class="stat"><small>Countries</small><b id="prog">0/4</b></div>
+  <div class="spacer"></div>
+  <button class="hbtn" id="b-globe" title="Back to the globe">🌍 <span class="lbl">Globe</span></button>
+  <button class="hbtn" id="b-notes" aria-pressed="false" title="Show the team's fact-check notes (N)">📝 <span class="lbl">Notes</span></button>
+  <button class="hbtn" id="b-full" title="Fullscreen (F)">⛶</button>
+  <button class="hbtn" id="finish" disabled>Finish 🏁</button>
+</header>
+
+<section id="s-title" class="screen stars active">
+  <div class="center">
+    <div class="orb" aria-hidden="true"></div>
+    <h1 id="t-title"></h1>
+    <p class="pitch" id="t-pitch"></p>
+    <div class="btnrow" id="t-btns"></div>
+    <p class="fine">Keys: <kbd>1</kbd>–<kbd>4</kbd> choose · <kbd>Enter</kbd> continue · <kbd>F</kbd> fullscreen · <kbd>N</kbd> fact-check notes</p>
+  </div>
+</section>
+
+<section id="s-globe" class="screen">
+  <canvas id="globe" aria-label="Interactive globe. Use the country buttons below to choose a destination."></canvas>
+  <div id="tip"></div>
+  <div id="dock">
+    <div id="hint">Drag to spin the globe · choose a glowing pin to visit</div>
+    <div id="chips"></div>
+  </div>
+</section>
+
+<section id="s-stage" class="screen stars"><div class="wrap"><div class="card" id="stage"></div></div></section>
+
+<section id="s-final" class="screen stars"><div class="center" id="final"></div></section>
+
+<script>
+/* =====================================================================
+   SCENARIOS: ALL GAME TEXT LIVES HERE. Edit freely; no game logic below
+   depends on the wording. Basic HTML (<b>, <i>) is allowed in text.
+
+   Conventions for the team:
+   - source_note  : what to verify (and where) before presenting a claim.
+                    Shown in-game only when "Notes" (N key) is switched on.
+   - assumption: true : the numbers in that item are SIMPLIFIED GAME
+                    ASSUMPTIONS, not documented data. They are marked
+                    with "≈" in the game. assumption_note says which ones.
+   - outcome      : the "what happens next" picture for an option.
+                    bg = street | snow | home | bins | roof; art = emoji in the
+                    scene; sticker = the short label stamped on the picture.
+   - concept      : the course-concept panel on each country summary.
+                    text = documented facts; game_note = game assumptions.
+   - sources      : the list players can open under "Sources for documented facts".
+   - Exactly one option per question has correct: true.
+   - Scoring: 100 first try, 50 after a retry, 50 for the replay round.
+   ===================================================================== */
+const SCENARIOS = {
+  meta: {
+    title: "Making the Sustainable Choice <em>the Easy One</em>",
+    pitch: "Travel to four countries, make everyday decisions, and see how rules, prices and infrastructure quietly shape what we choose.",
+    take_home: "Good sustainable habits exist all over the world, and we can learn from each other.",
+    credits: "CIV300 Group G13: Dayoung Nam, Grace Shi, Kovid Srivart, Nicholas Carbones.",
+    // Rank = highest entry whose min_pct is reached (score / maximum).
+    // Retries always earn half points, so the lowest possible score is a little over 50%.
+    ranks: [
+      { min_pct: 0,   title: "Eco Tourist" },
+      { min_pct: 65,  title: "Curious Traveller" },
+      { min_pct: 78,  title: "Policy Explorer" },
+      { min_pct: 90,  title: "Systems Thinker" },
+      { min_pct: 100, title: "Global Sustainability Ambassador" }
+    ]
+  },
+
+  countries: [
+    /* ------------------------------------------------ SOUTH KOREA */
+    {
+      id: "kr", name: "South Korea", flag: "🇰🇷", city: "Seoul", topic: "Waste",
+      accent: "#60a5fa", scene_emoji: ["🏙️", "🍜", "♻️"],
+      pins: [{ lat: 37.57, lon: 126.98, label: "Seoul" }],
+      focus: { lat: 36.5, lon: 127.5 },
+      intro: {
+        title: "After dinner in Seoul",
+        scene: "You just finished a takeout dinner in your Seoul apartment. The table is covered in containers, bottles and leftovers. Here, where each item goes decides what you pay.",
+        policy_name: "Volume-based waste fee (jongnyangje, 종량제)",
+        policy: "General trash must go out in official paid bags. Properly sorted recyclables are collected free.",
+        source_note: "Verify with Korea Ministry of Environment: volume-based waste fee system, nationwide since 1995; bag prices set by each district."
+      },
+      questions: [
+        {
+          situation: "Seoul, after dinner. A plastic takeout container still has tteokbokki sauce stuck to it.",
+          prompt: "Where does it go?",
+          options: [
+            { text: "Straight into the plastics recycling bin, sauce and all",
+              outcome: { bg: "bins", art: ["🥡", "💧", "♻️"], sticker: "Batch contaminated" }, why_not: "Food residue contaminates the plastics around it, and dirty loads can be rejected at the sorting plant." },
+            { text: "Scrape the leftovers into food waste, rinse it, then put it in plastics recycling",
+              outcome: { bg: "bins", art: ["🚰", "🥡", "✨", "♻️"], sticker: "Recycled for free" }, correct: true },
+            { text: "The whole thing goes into the paid general-waste bag",
+              outcome: { bg: "bins", art: ["🥡", "🗑️", "💸"], sticker: "Paid bag fills faster" }, why_not: "That is allowed, but you pay for the bag space and a recyclable container gets burned or buried." }
+          ],
+          system: "In Seoul, general trash must go out in official paid bags (the jongnyangje system), while properly sorted recyclables are collected free. A clean container costs you nothing to recycle; a dirty one spoils the batch. Only containers too stained to clean belong in the general bag.",
+          benefit: "A clean container can actually become new plastic. A sauce-covered one can spoil the recyclables around it. Rinsing takes seconds, keeps the recycling stream usable, and saves space in your paid bag.",
+          source_note: "Verify with Seoul Metropolitan Government / Ministry of Environment recycling guidance: recyclables must be emptied and rinsed; containers that cannot be cleaned go in general waste."
+        },
+        {
+          situation: "Seoul, one week later. Your paid general-waste bag fills up every two days, and new bags are sold at the convenience store downstairs.",
+          prompt: "What do you do?",
+          options: [
+            { text: "Buy bigger bags, and more of them",
+              outcome: { bg: "street", art: ["🛍️", "🛍️", "🛍️", "💸"], sticker: "More bags, more cost" }, why_not: "You can, but every extra bag costs money, and everything inside is burned or landfilled." },
+            { text: "Sort more carefully: move recyclables and food scraps out of the general bag",
+              outcome: { bg: "bins", art: ["♻️", "🍲", "🛍️"], sticker: "Fewer paid bags" }, correct: true },
+            { text: "Use an ordinary unmarked bag and leave it out at night",
+              outcome: { bg: "street", art: ["🌙", "🗑️", "👮"], sticker: "Not collected + fine" }, why_not: "Putting trash out in non-official bags counts as illegal dumping and can be fined." }
+          ],
+          system: "This is the heart of jongnyangje: the fee for general waste is built into the price of the official bags, so you pay by volume, while sorted recyclables are picked up free. The cheapest move is always to get things out of the paid bag and into the right stream.",
+          benefit: "Less goes to incineration and landfill, more material is recovered, and you buy fewer bags. The pricing makes the sustainable choice the cheaper one. Korea's volume-based fee, in place nationwide since 1995, is widely credited with cutting household waste and raising recycling rates.",
+          source_note: "Verify the reported effect of the volume-based fee on waste generation and recycling rates (Ministry of Environment / OECD reviews). Illegal-dumping fines vary by district.",
+          assumption: true,
+          assumption_note: "How fast the bag fills is a game assumption."
+        },
+        {
+          situation: "Seoul, clearing the table. You have leftover rice, vegetable trimmings, chicken bones and clam shells.",
+          prompt: "What goes in the food-waste bin?",
+          options: [
+            { text: "Everything: it all came from food",
+              outcome: { bg: "bins", art: ["🍚", "🍗", "🐚", "⚙️"], sticker: "Batch spoiled" }, why_not: "Bones and shells cannot be processed with food waste and can damage the equipment." },
+            { text: "Rice and vegetables in food waste; bones and shells in the general bag",
+              outcome: { bg: "bins", art: ["🍚", "🥬", "➡️", "🌱"], sticker: "Becomes feed and compost" }, correct: true },
+            { text: "Everything in the general bag, to be safe",
+              outcome: { bg: "bins", art: ["🍚", "🗑️", "💸"], sticker: "Paid for, then burned" }, why_not: "Food scraps are collected separately in Korea. In the general bag they take up paid space and are lost as a resource." },
+            { text: "Rinse it all down the kitchen sink",
+              outcome: { bg: "home", art: ["🚰", "🍚", "🚫"], sticker: "Pipes clogged" }, why_not: "This can clog pipes and shifts the load onto wastewater treatment." }
+          ],
+          system: "Korea collects food waste separately and processes much of it into animal feed, compost or biogas. A common rule of thumb: if an animal could not eat it, it is not food waste. Bones, clam and egg shells, and hard fruit pits go in the general bag. Many apartment complexes use bins that weigh what you drop in and bill your household.",
+          benefit: "Clean food waste can become feed, compost or biogas instead of rotting in a landfill, where it would release methane. Keeping bones and shells out protects the processing equipment and the quality of what comes out.",
+          source_note: "Verify: local district list of items that are NOT food waste (bones, shells, pits); weigh-and-pay (RFID) food-waste bins in apartment complexes; how collected food waste is processed; Korea's ban on landfilling food waste."
+        }
+      ],
+      replay: {
+        title: "The same sorting job, with clearer bin labels",
+        recap: "You are back at your Seoul apartment complex's food-waste collection point with the same dinner leftovers. Until now, the bins only had small text labels.",
+        change: "The complex adds large picture labels to every bin, including “bones & shells → general bag”.",
+        question: {
+          prompt: "What do you expect to happen across the whole complex?",
+          options: [
+            { text: "Fewer wrong items end up in the food-waste bin", correct: true },
+            { text: "Nothing changes: everyone already knows the rules" },
+            { text: "People give up and put everything in the general bag" }
+          ]
+        },
+        visual: {
+          type: "streams",
+          before_title: "Small text-only labels",
+          after_title: "Big picture labels",
+          streams: [
+            { id: "food", label: "🍲 Food waste" },
+            { id: "recycle", label: "♻️ Recycling (free)" },
+            { id: "general", label: "🗑️ General (paid bag)" }
+          ],
+          // "correct" is the right stream; before/after is where the item ends up.
+          items: [
+            { icon: "🍚", name: "rice",          correct: "food",    before: "food",    after: "food" },
+            { icon: "🥬", name: "veg scraps",    correct: "food",    before: "food",    after: "food" },
+            { icon: "🍗", name: "bones",         correct: "general", before: "food",    after: "general" },
+            { icon: "🐚", name: "clam shells",   correct: "general", before: "food",    after: "general" },
+            { icon: "🥚", name: "eggshells",     correct: "general", before: "food",    after: "general" },
+            { icon: "🧴", name: "rinsed bottle", correct: "recycle", before: "general", after: "recycle" },
+            { icon: "🥡", name: "clean container", correct: "recycle", before: "recycle", after: "recycle" },
+            { icon: "🧻", name: "used tissue",   correct: "general", before: "general", after: "general" }
+          ]
+        },
+        chain: {
+          changed: "Clear picture labels at the bins",
+          choice: "Sorting correctly takes no guesswork",
+          effect: "Cleaner food-waste and recycling streams, so more is actually recovered"
+        },
+        source_note: "The before/after item placements are illustrative, not measured. If the team wants to cite evidence, look for a waste-audit or signage study showing that clearer labels reduce contamination.",
+        assumption: true,
+        assumption_note: "Which items end up in which bin is an illustrative game assumption."
+      },
+      concept: {
+        name: "Enhanced greenhouse effect",
+        text: "Food buried in a landfill rots without oxygen and releases methane (CH₄). Over 100 years, methane traps about 27–30 times more heat than the same mass of CO₂. Korea banned sending food waste straight to landfill in 2005, so separating food scraps keeps that methane out of the atmosphere.",
+        source_note: "Verify the methane GWP-100 range in IPCC AR6 WG1 Chapter 7 (Table 7.15) and the 2005 landfill ban with the Korea Ministry of Environment."
+      },
+      sources: [
+        "Korea Ministry of Environment: volume-based waste fee system (nationwide since 1995)",
+        "Korea Ministry of Environment: ban on direct landfilling of food waste (2005) and weight-based food-waste fees",
+        "IPCC AR6 Working Group I (2021), Chapter 7: methane's 100-year global warming potential ≈ 27–30"
+      ],
+      summary: { idea: "Charge for what is thrown away and collect what is sorted for free. The price signal makes careful sorting the cheap option." },
+      takeaway: "Seoul: paid trash bags and free recycling make sorting the cheaper choice."
+    },
+
+    /* ------------------------------------------------ BRAZIL */
+    {
+      id: "br", name: "Brazil", flag: "🇧🇷", city: "São Paulo", topic: "Commute",
+      accent: "#facc15", scene_emoji: ["🌆", "🚗", "🚇"],
+      pins: [{ lat: -23.55, lon: -46.63, label: "São Paulo" }],
+      focus: { lat: -15, lon: -52 },
+      intro: {
+        title: "Rush hour in São Paulo",
+        scene: "It is a weekday morning in São Paulo, one of the largest cities in the Americas. Traffic is already building, and today the last digit of your licence plate puts your car under the rodízio.",
+        policy_name: "Rodízio (plate-based driving restriction)",
+        policy: "Each car is barred from the central zone during peak hours on one weekday, depending on the last digit of its plate.",
+        source_note: "Verify with CET / Prefeitura de São Paulo: rodízio municipal de veículos, in place since 1997, applies in the expanded centre (centro expandido)."
+      },
+      questions: [
+        {
+          situation: "São Paulo, Wednesday, 7:30 am. Your plate ends in 5, so your car is barred from the expanded centre during peak hours today. Work starts downtown at 9:00.",
+          prompt: "How do you get to work?",
+          options: [
+            { text: "Drive anyway and hope no camera catches you",
+              outcome: { bg: "street", art: ["🚗", "📸", "🧾"], sticker: "Fine + licence points" }, why_not: "The rule is enforced with fines and licence points, and you add one more car to peak traffic." },
+            { text: "Take the bus and metro",
+              outcome: { bg: "street", art: ["🚌", "🚇", "🧑‍🤝‍🧑", "🧑‍🤝‍🧑"], sticker: "Hundreds share one train" }, correct: true },
+            { text: "Get a lift with a coworker whose plate is allowed today",
+              outcome: { bg: "street", art: ["🚗", "🚗", "🚙", "🚗"], sticker: "Still in the traffic jam" }, why_not: "Sharing beats driving alone, but it is still a car in peak traffic. Shared transit moves far more people for the same fuel." },
+            { text: "Drive in early, before the restricted hours begin",
+              outcome: { bg: "street", art: ["🌅", "🚗", "⛽"], sticker: "Same fuel, earlier hour" }, why_not: "Legal, but it only moves your car trip to a different hour. The fuel burned is about the same." }
+          ],
+          system: "São Paulo's rodízio, in place since 1997, keeps each car out of the expanded centre during the morning and evening peaks (7–10 am and 5–8 pm) on one weekday, set by the last digit of its plate. Two of the ten plate endings sit out each weekday, and drivers get a weekly nudge to try the bus and metro network.",
+          benefit: "One bus or metro train replaces dozens to hundreds of cars. Per passenger it uses far less energy and far less road space, and São Paulo's metro runs on electricity from a grid that is mostly hydro and other renewables.",
+          source_note: "Verify rodízio details with CET São Paulo: restricted hours (commonly given as 7–10 am and 5–8 pm), the plate-digit schedule (5 and 6 on Wednesday), fine and licence points. Verify Brazil's electricity mix (majority renewable, hydro-led) with EPE or ONS."
+        },
+        {
+          situation: "São Paulo, lunch break. A coworker shares a trick: buy a cheap second-hand car with a different final plate digit, so one of your cars is always allowed.",
+          prompt: "How do you handle your restricted day from now on?",
+          options: [
+            { text: "Buy the second car",
+              outcome: { bg: "street", art: ["🚗", "🚙", "💨"], sticker: "Two cars, more smog" }, why_not: "This is a known side effect of plate-based bans: more cars in total, and the extra one is often older and more polluting." },
+            { text: "Keep one car and use transit on that one day each week",
+              outcome: { bg: "street", art: ["🏠", "🚗", "🚇"], sticker: "Car rests one day a week" }, correct: true },
+            { text: "Borrow a relative's car every Wednesday",
+              outcome: { bg: "street", art: ["🚙", "🚗", "🚗"], sticker: "Same trip, new plate" }, why_not: "Still a solo car trip at peak hour. It just wears a different plate." }
+          ],
+          system: "The rodízio restricts plates, not people. Studies of plate-based restrictions, most famously in Mexico City, found that some households responded by buying an extra car, often an older and dirtier one, which cancels out the benefit. A rule works best when the alternative it points to is truly practical.",
+          benefit: "Manufacturing a car has a large material and energy footprint, and an older engine usually emits more per kilometre. Using transit one day a week avoids both, and it is exactly the habit the policy was designed to build.",
+          source_note: "Verify: Davis (2008), 'The Effect of Driving Restrictions on Air Quality in Mexico City' (more vehicles, no air-quality gain). Look for São Paulo-specific evidence on second-car purchases before presenting it as a São Paulo fact."
+        },
+        {
+          situation: "São Paulo, Friday. Your car is allowed today. It is the same cross-town trip to work.",
+          prompt: "Which option uses the least energy per passenger?",
+          options: [
+            { text: "Drive alone",
+              outcome: { bg: "street", art: ["🚗", "🔥", "🔥"], sticker: "Most of the fuel becomes heat" }, why_not: "An engine turns only part of the fuel's chemical energy into motion; most leaves as waste heat. And all of it moves just one person." },
+            { text: "Carpool with two coworkers",
+              outcome: { bg: "street", art: ["🚗", "🧑‍🤝‍🧑", "🧍"], sticker: "Fuel shared by three" }, why_not: "Better: the same fuel now moves three people. But a full train divides its energy among far more passengers." },
+            { text: "Ride the metro",
+              outcome: { bg: "street", art: ["🚇", "🧑‍🤝‍🧑", "🧑‍🤝‍🧑", "🧑‍🤝‍🧑"], sticker: "Energy shared by hundreds" }, correct: true }
+          ],
+          system: "First Law of Thermodynamics: energy is never destroyed, only converted. In a car, the chemical energy in the fuel becomes motion plus waste heat: only about 12–30% of it actually moves the car. The rodízio matters because private cars spend all that energy moving, on average, little more than one person each.",
+          benefit: "A full metro train shares its energy among hundreds of riders, and electric motors lose far less energy as heat than combustion engines do. Energy per passenger drops sharply, and emissions drop with it.",
+          source_note: "Verify typical combustion-engine efficiency (roughly 20–35% of fuel energy becomes motion) and car vs. metro energy per passenger-km from a transport-energy source such as the IEA. Note that many Brazilian cars run on ethanol blends."
+        }
+      ],
+      replay: {
+        title: "The same commute, with a better transit connection",
+        recap: "It is the same restricted Wednesday in São Paulo and the same trip to work. Until now, reaching the metro meant a slow bus stuck in mixed traffic.",
+        change: "The city adds a bus corridor with its own lane from your neighbourhood to the metro, on a single integrated fare.",
+        question: {
+          prompt: "How does your restricted-day commute compare now?",
+          options: [
+            { text: "Transit becomes faster than driving, and still uses far less fuel", correct: true },
+            { text: "Driving stays quickest: transit cannot win on time" },
+            { text: "Transit gets faster but now burns more fuel per rider than a car" }
+          ]
+        },
+        visual: {
+          type: "bars",
+          before_title: "Slow bus in mixed traffic",
+          after_title: "Bus lane + one fare to the metro",
+          groups: [
+            { title: "Door-to-door travel time", rows: [
+              { label: "Solo car", assumption: true, before: { v: 55, text: "55 min" }, after: { v: 55, text: "55 min" } },
+              { label: "Bus + metro", assumption: true, before: { v: 80, text: "80 min", tag: "Slower than driving", good: false }, after: { v: 45, text: "45 min", tag: "Now the faster way", good: true } }
+            ] },
+            { title: "Fuel energy used per passenger", rows: [
+              { label: "Solo car", assumption: true, before: { v: 100, text: "high" }, after: { v: 100, text: "high" } },
+              { label: "Bus + metro", assumption: true, before: { v: 22, text: "much lower" }, after: { v: 22, text: "much lower" } }
+            ] }
+          ]
+        },
+        chain: {
+          changed: "A dedicated bus lane and one fare to the metro",
+          choice: "Transit is now the faster, simpler way in",
+          effect: "Far less fuel burned per commuter, and less exhaust and waste heat in the city"
+        },
+        source_note: "All travel times and bar lengths are game assumptions. To support the idea, verify São Paulo's bus corridors and integrated fare card (Bilhete Único) with SPTrans, and car vs. transit energy per passenger with a transport-energy source.",
+        assumption: true,
+        assumption_note: "Travel times and bar lengths are simplified game assumptions."
+      },
+      concept: {
+        name: "First Law of Thermodynamics",
+        text: "Energy is conserved: the chemical energy in fuel is converted, never destroyed. In a gasoline car only about 12–30% of that energy ends up moving the car, and the rest leaves as waste heat. A solo driver spends all of it moving one person, while a metro train shares its energy among hundreds of riders.",
+        source_note: "Verify the 12–30% figure on fueleconomy.gov ('Where the Energy Goes: Gasoline Vehicles')."
+      },
+      sources: [
+        "CET São Paulo / Prefeitura de São Paulo: rodízio municipal de veículos (since 1997; 7–10 am and 5–8 pm; two plate endings each weekday)",
+        "U.S. Department of Energy, fueleconomy.gov, “Where the Energy Goes”: about 12–30% of fuel energy moves a gasoline car",
+        "Davis, L. W. (2008), Journal of Political Economy: “The Effect of Driving Restrictions on Air Quality in Mexico City”",
+        "EPE (Brazil), Balanço Energético Nacional: electricity is more than 80% renewable, led by hydro"
+      ],
+      summary: { idea: "A driving restriction works best when it is paired with transit that is truly faster and simpler than the car." },
+      takeaway: "São Paulo: a rule can push people out of cars, but good transit is what keeps them out."
+    },
+
+    /* ------------------------------------------------ CANADA */
+    {
+      id: "ca", name: "Canada", flag: "🇨🇦", city: "Toronto & Calgary", topic: "Travel mode",
+      accent: "#fb7185", scene_emoji: ["🏘️", "🚋", "❄️"],
+      pins: [{ lat: 43.65, lon: -79.38, label: "Toronto" }, { lat: 51.05, lon: -114.07, label: "Calgary" }],
+      focus: { lat: 50, lon: -96 },
+      intro: {
+        title: "Two neighbourhoods: Toronto and Calgary",
+        scene: "Same country, two very different streets. In a dense Toronto neighbourhood, a streetcar stops around the corner. In a newer suburb on the edge of Calgary, the nearest bus stop is a long walk away. You will make everyday trips in both places.",
+        policy_name: "Built infrastructure: how close transit and shops are to home",
+        policy: "This stop is not about one law. It is about how street layout and transit access decide which choices are realistic.",
+        source_note: "Both neighbourhoods are composites for the game. Verify general differences in density and commuting mode share with Statistics Canada census journey-to-work data for Toronto and Calgary."
+      },
+      questions: [
+        {
+          situation: "Toronto, a dense neighbourhood near downtown. You need a few things for dinner. The grocery store is a 7-minute walk away, and your car is parked behind the building.",
+          prompt: "How do you go?",
+          options: [
+            { text: "Drive",
+              outcome: { bg: "street", art: ["🚗", "🅿️", "⏱️"], sticker: "Parking eats the time saved" }, why_not: "On a trip this short, driving saves almost no time once you park, and a cold engine burns extra fuel." },
+            { text: "Walk with a tote bag",
+              outcome: { bg: "street", art: ["🚶", "👜", "🏪"], sticker: "7 minutes, zero fuel" }, correct: true },
+            { text: "Order a ride-hail there and back",
+              outcome: { bg: "street", art: ["🚕", "↔️", "🚕"], sticker: "Two car trips" }, why_not: "That is two car trips, plus the driver's travel to reach you." }
+          ],
+          system: "In this Toronto neighbourhood, shops, homes and transit are mixed together, so daily errands are a short walk. Nobody had to persuade you: the way the street is built makes walking the quickest option.",
+          benefit: "Walking burns no fuel and has no tailpipe emissions. In a dense neighbourhood it is also the fastest and cheapest option, so the sustainable choice is simply the easy one.",
+          source_note: "Verify general claims about density, mixed land use and walking/transit mode share using City of Toronto or Statistics Canada data.",
+          assumption: true,
+          assumption_note: "The 7-minute walk is a game assumption."
+        },
+        {
+          situation: "Calgary, a car-oriented suburb. Class is 15 km away near downtown. The nearest bus stop is a 20-minute walk and the bus comes every half hour. A CTrain station with a park-and-ride lot is a 10-minute drive away.",
+          prompt: "How do you get to class?",
+          options: [
+            { text: "Drive alone all the way downtown",
+              outcome: { bg: "street", art: ["🚗", "🛣️", "⛽"], sticker: "15 km of fuel for one rider" }, why_not: "It is the obvious choice here, and that is the point: the neighbourhood was built around it. It is still the highest-emission option for this trip." },
+            { text: "Drive to the station, then ride the CTrain (park-and-ride)",
+              outcome: { bg: "street", art: ["🚗", "🅿️", "🚈"], sticker: "Short drive, long train ride" }, correct: true },
+            { text: "Ride-hail the whole way",
+              outcome: { bg: "street", art: ["🚕", "🛣️", "⛽"], sticker: "Full car trip plus extra km" }, why_not: "That is still a full-length car trip, plus the driver's extra travel." }
+          ],
+          system: "In this Calgary suburb, homes, shops and transit are far apart, so the car is the default. That is a design outcome, not a personal failing. Calgary's park-and-ride lots act as a bridge: a short drive, then the light-rail CTrain carries you most of the way.",
+          benefit: "Most of the distance is covered by electric light rail shared with hundreds of riders, and Calgary Transit has powered the CTrain with wind-generated electricity since 2001. The car is used only for the short leg where no good alternative exists.",
+          source_note: "Verify Calgary Transit's 'Ride the Wind' program (CTrain powered by wind-generated electricity) and current park-and-ride availability.",
+          assumption: true,
+          assumption_note: "Distances, walk time and bus frequency are game assumptions."
+        },
+        {
+          situation: "Toronto, a January morning at −12 °C. Work is 4 km away. The streetcar stop is 3 minutes from your door, and a streetcar comes every few minutes.",
+          prompt: "How do you travel?",
+          options: [
+            { text: "Warm the car up for ten minutes, then drive",
+              outcome: { bg: "snow", art: ["🚗", "💨", "⏱️"], sticker: "10 min of fuel, 0 km" }, why_not: "Idling burns fuel while going nowhere, and you still face downtown traffic and parking." },
+            { text: "Take the streetcar",
+              outcome: { bg: "snow", art: ["🚋", "🧣", "🧑‍🤝‍🧑"], sticker: "Only 3 minutes in the cold" }, correct: true },
+            { text: "Ride-hail door to door",
+              outcome: { bg: "snow", art: ["🚕", "❄️", "🧍"], sticker: "One rider, one car" }, why_not: "Warm, but it is a single-passenger car trip on a route transit already serves." }
+          ],
+          system: "With a stop three minutes away and frequent service, the cold part of this Toronto trip is short. Now picture the same morning in the Calgary suburb: a 20-minute walk and up to a half-hour wait in the cold. Most people would drive there, and that is the system talking, not the person.",
+          benefit: "Toronto's streetcars are electric and carry many riders at once, so energy and emissions per passenger are a fraction of a solo car's. Ontario's electricity is also mostly low-carbon.",
+          source_note: "Verify Ontario's electricity mix (mostly nuclear and hydro) with the IESO.",
+          assumption: true,
+          assumption_note: "Temperature, distances and service frequency are game assumptions."
+        }
+      ],
+      replay: {
+        title: "The same winter trip, with a shorter walk to transit",
+        recap: "It is the same January morning, this time in the Calgary suburb. Same person, same 15 km trip to class. Until now, the nearest bus stop was a 20-minute walk away.",
+        change: "A new frequent bus route adds a stop with a heated shelter 4 minutes from your door, connecting straight to the CTrain.",
+        question: {
+          prompt: "What changes?",
+          options: [
+            { text: "Transit becomes a realistic choice: same person, different system", correct: true },
+            { text: "Nothing: people in suburbs simply prefer to drive" },
+            { text: "Driving gets slower, so people are forced out of their cars" }
+          ]
+        },
+        visual: {
+          type: "bars",
+          before_title: "Bus stop 20 minutes away",
+          after_title: "Bus stop 4 minutes away",
+          groups: [
+            { title: "Door-to-door time to class", rows: [
+              { label: "Drive", assumption: true, before: { v: 25, text: "25 min", tag: "Realistic", good: true }, after: { v: 25, text: "25 min", tag: "Realistic", good: true } },
+              { label: "Bus + CTrain", assumption: true, before: { v: 75, text: "75 min", tag: "Unrealistic for most", good: false }, after: { v: 40, text: "40 min", tag: "Realistic", good: true } }
+            ] },
+            { title: "Time outside in the cold", rows: [
+              { label: "Drive", assumption: true, before: { v: 2, text: "2 min" }, after: { v: 2, text: "2 min" } },
+              { label: "Bus + CTrain", assumption: true, before: { v: 35, text: "up to 35 min" }, after: { v: 6, text: "about 6 min" } }
+            ] }
+          ]
+        },
+        chain: {
+          changed: "A frequent bus stop moved from 20 minutes away to 4",
+          choice: "Taking transit becomes practical, even in winter",
+          effect: "Fewer solo car trips, so less fuel burned per person"
+        },
+        source_note: "All times are game assumptions. To support the idea, look for research linking walking distance to transit stops and service frequency with ridership (for example, the common 400 m / 5-minute walk planning guideline).",
+        assumption: true,
+        assumption_note: "All times shown are simplified game assumptions."
+      },
+      concept: {
+        name: "First Law of Thermodynamics",
+        text: "Burning 1 litre of gasoline releases about 34 MJ of chemical energy and about 2.3 kg of CO₂. That energy is conserved: a small part moves the car and the rest becomes heat. The less gasoline a trip needs, the less of both.",
+        game_note: "In this game, the 15 km solo drive burns about 1.3 L (about 3 kg of CO₂), while the short drive to the park-and-ride burns about 0.4 L (about 1 kg).",
+        source_note: "Verify 2.3 kg CO₂ per litre with Natural Resources Canada and about 34 MJ per litre with the U.S. EIA or NRCan. The litres burned are game assumptions (about 8.7 L/100 km)."
+      },
+      sources: [
+        "Natural Resources Canada: about 2.3 kg of CO₂ per litre of gasoline burned",
+        "U.S. Energy Information Administration: energy content of gasoline (about 34 MJ per litre)",
+        "Calgary Transit: “Ride the Wind” program, CTrain powered by wind-generated electricity (since 2001)",
+        "IESO: Ontario's electricity supply mix (mostly nuclear and hydro)",
+        "Statistics Canada, Census of Population: main mode of commuting, Toronto and Calgary"
+      ],
+      summary: { idea: "Put frequent transit within a short walk of people's homes. People choose what the street makes easy." },
+      takeaway: "Toronto & Calgary: the same person makes different choices in different neighbourhoods."
+    },
+
+    /* ------------------------------------------------ INDIA */
+    {
+      id: "in", name: "India", flag: "🇮🇳", city: "Hyderabad, Telangana", topic: "Cooling",
+      accent: "#fb923c", scene_emoji: ["☀️", "🏠", "🌀"],
+      pins: [{ lat: 17.39, lon: 78.49, label: "Telangana" }],
+      focus: { lat: 20, lon: 79 },
+      intro: {
+        title: "A hot day in Telangana",
+        scene: "It is a May afternoon in Hyderabad, Telangana, and the temperature is climbing past 40 °C. You live in a top-floor flat, directly under a flat concrete roof that has been soaking up sun since morning.",
+        policy_name: "Telangana Cool Roof Policy",
+        policy: "The state promotes reflective or white roof coatings that cut indoor heat and the need for air conditioning.",
+        source_note: "Verify with the Government of Telangana's Cool Roof Policy 2023–2028 document. Typical May temperatures in Hyderabad: verify with the India Meteorological Department."
+      },
+      questions: [
+        {
+          situation: "Hyderabad, Telangana, 9 pm. The day has cooled to a warm but bearable 30 °C, and there is a light breeze outside.",
+          prompt: "How do you get comfortable for the evening?",
+          options: [
+            { text: "Air conditioner at 18 °C",
+              outcome: { bg: "home", art: ["❄️", "🥶", "⚡", "⚡"], sticker: "Compressor flat out" }, why_not: "A very low setpoint makes the compressor work hardest and longest, for cooling you do not need tonight." },
+            { text: "Air conditioner at 24 °C",
+              outcome: { bg: "home", art: ["❄️", "⚡", "🌙"], sticker: "Cooling you don't need tonight" }, why_not: "A sensible setting, but tonight the outside air is mild enough to skip the compressor altogether." },
+            { text: "Open the windows and switch on the ceiling fan",
+              outcome: { bg: "home", art: ["🪟", "🌀", "😌"], sticker: "A fraction of the power" }, correct: true }
+          ],
+          system: "A ceiling fan draws roughly 50–75 W, while a room air conditioner draws 1,000–1,500 W, because it only moves air instead of pumping heat out of the room. On Telangana's grid, where most electricity comes from burning coal, every unit saved avoids emissions at the power plant.",
+          benefit: "Moving air helps your body shed heat, so you feel cooler at the same room temperature. The fan does this with a small fraction of an AC's electricity, which means much less coal burned.",
+          source_note: "Verify typical power draw of a ceiling fan (tens of watts) vs. a room AC (around a kilowatt or more) with India's Bureau of Energy Efficiency (BEE). Verify the coal share of electricity generation with the Central Electricity Authority (CEA).",
+          assumption: true,
+          assumption_note: "The evening temperature is a game assumption. Fan and AC wattages are typical values, not measurements."
+        },
+        {
+          situation: "Hyderabad, Telangana, 3 pm the next day. It is 41 °C outside and the fan alone is no longer enough, so you switch on the AC.",
+          prompt: "Which setting do you choose?",
+          options: [
+            { text: "18 °C on full blast",
+              outcome: { bg: "home", art: ["❄️", "⚡", "⚡", "⚡"], sticker: "Runs longer, not faster" }, why_not: "The room does not cool any faster. The AC just runs longer and harder to reach a colder target." },
+            { text: "24 °C, with the ceiling fan on low",
+              outcome: { bg: "home", art: ["❄️", "🌀", "😌"], sticker: "Comfortable at 24 °C" }, correct: true },
+            { text: "21 °C, with a window slightly open for fresh air",
+              outcome: { bg: "home", art: ["🪟", "♨️", "❄️"], sticker: "Cooling the street" }, why_not: "An open window lets hot air pour in, so the AC ends up cooling the street." }
+          ],
+          system: "India's Bureau of Energy Efficiency recommends 24 °C as the default AC setting, and new room air conditioners ship set to it. The smaller the gap between indoors and outdoors, the less heat the AC has to pump out and the less electricity it draws.",
+          benefit: "Every degree you raise the setpoint cuts the AC's electricity use (BEE cites roughly 6% per degree). 24 °C with a fan feels as comfortable as a much colder room, using far less coal-fired electricity.",
+          source_note: "Verify BEE's 24 °C default-setting requirement for room air conditioners (from 2020) and its 'about 6% per degree' savings figure.",
+          assumption: true,
+          assumption_note: "The outdoor temperature is a game assumption."
+        },
+        {
+          situation: "Hyderabad, Telangana, 1 pm. You are leaving for a three-hour class. Sun is streaming in through the window.",
+          prompt: "What do you do before you go?",
+          options: [
+            { text: "Leave the AC running so the room is cool when you return",
+              outcome: { bg: "home", art: ["❄️", "⚡", "🚪"], sticker: "3 hours cooling nobody" }, why_not: "That is three hours of cooling an empty room while the sun keeps pouring in." },
+            { text: "Close the curtains, switch everything off, and go",
+              outcome: { bg: "home", art: ["☀️", "🚫", "🪟"], sticker: "Sun blocked, 0 kWh used" }, correct: true },
+            { text: "Open every window wide to let the heat out",
+              outcome: { bg: "home", art: ["🪟", "♨️", "🥵"], sticker: "Hot air pours in" }, why_not: "At midday the air outside is hotter than the room, so open windows let heat in." }
+          ],
+          system: "Sunlight that comes through glass turns into heat when it lands on your floor and furniture, and that heat stays in the room. Shading the window stops much of that energy before it gets in. Telangana's cool roofs apply the same idea to the top of the building.",
+          benefit: "Blocking the sun means less heat enters, so the room is cooler when you return and the AC has less work to do. It costs nothing and uses no electricity.",
+          source_note: "Verify general guidance that shading windows reduces solar heat gain and cooling load (BEE / Energy Conservation Building Code material)."
+        },
+        {
+          situation: "Hyderabad, Telangana. Your residents' association has money for one upgrade to help the top-floor flats, which bake every summer.",
+          prompt: "Which upgrade do you vote for?",
+          options: [
+            { text: "A bigger AC unit for every top-floor flat",
+              outcome: { bg: "roof", art: ["☀️", "❄️", "⚡"], sticker: "Same heat, bigger bill", roof: "dark" }, why_not: "This treats the symptom. The roof absorbs the same heat, and bigger ACs burn more electricity removing it." },
+            { text: "A reflective white “cool roof” coating",
+              outcome: { bg: "roof", art: ["☀️", "↩️", "😌"], sticker: "Sunlight bounced back", roof: "white" }, correct: true },
+            { text: "A dark waterproofing layer, because it is cheapest",
+              outcome: { bg: "roof", art: ["☀️", "♨️", "🥵"], sticker: "Even hotter below", roof: "dark" }, why_not: "Dark surfaces absorb most of the sunlight that hits them, making the rooms below even hotter." }
+          ],
+          system: "Telangana's Cool Roof Policy (2023–2028) promotes reflective roof coatings and materials across the state, requires them on government buildings and many larger buildings, and targets 300 km² of cool roofs by 2028. First Law of Thermodynamics: the heat a roof absorbs has to go somewhere, and much of it goes down into the room below.",
+          benefit: "A reflective roof sends most of the sunlight back out instead of absorbing it, so less heat flows into the room. The top floor stays cooler, the AC has less heat to remove, and it uses less electrical energy.",
+          source_note: "Verify in the Telangana Cool Roof Policy 2023–2028: which building types are mandatory vs. voluntary, and the area targets. Verify the indoor temperature reduction usually cited for cool roofs (often 2–5 °C) before quoting a number."
+        }
+      ],
+      replay: {
+        title: "The same hot day, with a reflective roof",
+        recap: "It is the same 41 °C afternoon in Hyderabad, Telangana. Same flat, same AC, still set to 24 °C. Until now, the roof was bare grey concrete.",
+        change: "The roof gets a reflective white coating under the state's cool roofs policy.",
+        question: {
+          prompt: "The AC and its setting are identical. What happens to its electricity use?",
+          options: [
+            { text: "It drops: less heat gets in, so there is less to remove", correct: true },
+            { text: "No change: the setpoint is the same" },
+            { text: "It rises: the white roof traps heat inside" }
+          ]
+        },
+        visual: {
+          type: "bars",
+          before_title: "Bare concrete roof",
+          after_title: "Reflective cool roof",
+          groups: [
+            { title: "1. Sunlight absorbed by the roof", rows: [
+              { label: "Roof surface", assumption: true, before: { v: 85, text: "most of it" }, after: { v: 30, text: "a small share" } }
+            ] },
+            { title: "2. AC electricity used this afternoon", rows: [
+              { label: "Top-floor flat", assumption: true, before: { v: 100, text: "baseline" }, after: { v: 80, text: "clearly lower" } }
+            ] },
+            { title: "3. CO₂ at the power plant (largely coal-based grid)", rows: [
+              { label: "From that electricity", assumption: true, before: { v: 100, text: "baseline" }, after: { v: 80, text: "falls in step" } }
+            ] }
+          ]
+        },
+        chain: {
+          changed: "A reflective roof, backed by state policy",
+          choice: "Staying comfortable takes less AC, with no extra effort",
+          effect: "Less coal-fired electricity, so lower CO₂ emissions"
+        },
+        source_note: "Bar lengths are relative game assumptions, not measurements. Verify typical cooling-energy savings from cool roofs on top floors (studies often report roughly 10–20%) and India's grid emission factor (CEA CO₂ Baseline Database).",
+        assumption: true,
+        assumption_note: "Bar lengths are relative game assumptions, not measured values."
+      },
+      concept: {
+        name: "Atmospheric composition",
+        text: "Roughly 70% of India's electricity comes from burning coal, and the grid emits about 0.7 kg of CO₂ for every kWh. Coal plants also release sulphur dioxide and fine particles, so air conditioning changes the air people breathe as well as the climate.",
+        game_note: "In this game, a 1.5 kW room AC running for 6 hours uses 9 kWh, which means about 6 kg of CO₂ at the power plant.",
+        source_note: "Verify the grid emission factor in the CEA CO₂ Baseline Database (latest version) and coal's share of generation with CEA / Ministry of Power. AC size and hours are game assumptions."
+      },
+      sources: [
+        "Government of Telangana: Telangana Cool Roof Policy 2023–2028 (target of 300 km² of cool roofs)",
+        "Bureau of Energy Efficiency (India): 24 °C default setting for room air conditioners (2020); about 6% electricity saved per degree",
+        "Central Electricity Authority (India): CO₂ Baseline Database, grid average ≈ 0.7 kg CO₂ per kWh",
+        "Central Electricity Authority / Ministry of Power (India): coal's share of electricity generation"
+      ],
+      summary: { idea: "Treat roofs as climate infrastructure. A low-cost reflective coating removes heat before any air conditioner is switched on." },
+      takeaway: "Telangana: a cool roof reflects heat away, so the AC has less to remove."
+    }
+  ]
+};
+
+/* =====================================================================
+   GAME LOGIC (no scenario text below this line)
+   ===================================================================== */
+(() => {
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const C = SCENARIOS.countries, M = SCENARIOS.meta;
+const byId = Object.fromEntries(C.map(c => [c.id, c]));
+const maxFor = c => c.questions.length * 100 + (c.replay && c.replay.question ? 50 : 0);
+const MAX = C.reduce((a, c) => a + maxFor(c), 0);
+const SAVE_KEY = "civ300-g13-save-v1";
+
+/* ---------- state + optional persistence ---------- */
+const fresh = () => ({ score: 0, c: Object.fromEntries(C.map(c => [c.id, { started: false, q: 0, tried: false, wrong: [], pts: 0, done: false }])) });
+let state = fresh();
+function save() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch (e) { /* storage unavailable: fine */ } }
+function load() {
+  try {
+    const s = JSON.parse(localStorage.getItem(SAVE_KEY));
+    if (!s || typeof s.score !== "number" || !s.c) return null;
+    for (const c of C) { const x = s.c[c.id]; if (!x || typeof x.q !== "number" || !Array.isArray(x.wrong) || x.q > c.questions.length) return null; }
+    return s;
+  } catch (e) { return null; }
+}
+function wipe() { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} }
+const doneCount = () => C.filter(c => state.c[c.id].done).length;
+
+/* ---------- screens + HUD ---------- */
+let screen = "title", cur = null;
+function show(name) {
+  screen = name;
+  $$(".screen").forEach(s => s.classList.toggle("active", s.id === "s-" + name));
+  $("#hud").classList.toggle("off", name === "title" || name === "final");
+  $("#b-globe").style.display = name === "stage" ? "" : "none";
+  if (name === "globe") { document.documentElement.style.setProperty("--accent", "#2dd4bf"); renderChips(); Globe.start(); } else Globe.stop();
+  updateHud();
+}
+function updateHud() {
+  $("#prog").textContent = doneCount() + "/" + C.length;
+  $("#finish").disabled = doneCount() < C.length;
+  if (!countAnim) $("#score").textContent = state.score;
+  if (screen === "globe") $("#hint").textContent = doneCount() === C.length
+    ? "All four visited! Press Finish to see your results."
+    : "Drag to spin the globe · choose a glowing pin to visit";
+}
+let countAnim = 0;
+function addScore(n) {
+  const el = $("#score"), from = state.score; state.score += n; save();
+  const r = el.getBoundingClientRect(), f = document.createElement("div");
+  f.className = "float"; f.textContent = "+" + n; f.style.left = (r.left + r.width / 2) + "px"; f.style.top = r.bottom + "px";
+  document.body.appendChild(f); setTimeout(() => f.remove(), 1400);
+  el.classList.remove("bump"); void el.offsetWidth; el.classList.add("bump");
+  const t0 = performance.now(), my = ++countAnim;
+  (function tick(t) {
+    if (my !== countAnim) return;
+    const p = Math.min(1, (t - t0) / 600);
+    el.textContent = Math.round(from + (state.score - from) * p);
+    if (p < 1) requestAnimationFrame(tick); else { countAnim = 0; el.textContent = state.score; }
+  })(t0);
+}
+
+/* ---------- title ---------- */
+function renderTitle() {
+  $("#t-title").innerHTML = M.title; $("#t-pitch").innerHTML = M.pitch;
+  const saved = load(), has = saved && (saved.score > 0 || C.some(c => saved.c[c.id].started));
+  $("#t-btns").innerHTML = has
+    ? `<button class="btn" data-primary id="t-cont">Continue journey</button><button class="btn ghost" id="t-new">Start new game</button>`
+    : `<button class="btn" data-primary id="t-new">Start</button>`;
+  if (has) $("#t-cont").onclick = () => { state = saved; show("globe"); };
+  $("#t-new").onclick = () => { state = fresh(); wipe(); show("globe"); };
+}
+
+/* ---------- stage helpers ---------- */
+const stage = $("#stage");
+function setStage(html) {
+  stage.innerHTML = html;
+  stage.classList.remove("in"); void stage.offsetWidth; stage.classList.add("in");
+  $("#s-stage").scrollTop = 0;
+  const p = $("[data-primary]", stage); if (p) p.focus({ preventScroll: true });
+}
+function skyline(c) {
+  let seed = [...c.id].reduce((a, ch) => a * 31 + ch.charCodeAt(0), 7), x = 0, out = "";
+  const rnd = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+  while (x < 400) { const w = 14 + rnd() * 26, h = 18 + rnd() * 52; out += `<rect x="${x.toFixed(1)}" y="${(100 - h).toFixed(1)}" width="${(w - 2).toFixed(1)}" height="${h.toFixed(1)}" rx="2"/>`; x += w; }
+  return `<svg viewBox="0 0 400 100" preserveAspectRatio="none" aria-hidden="true"><circle cx="330" cy="26" r="16" fill="#ffffff30"/><g fill="#04101f55">${out}</g></svg>`;
+}
+const banner = (c, sm) => `<div class="banner${sm ? " sm" : ""}">${skyline(c)}
+  <div class="emo" aria-hidden="true">${c.scene_emoji.map(e => `<span>${e}</span>`).join("")}</div>
+  <div class="place"><span class="tag topic">${c.topic}</span><span class="tag">${c.flag} ${c.city}, ${c.name}</span></div></div>`;
+const src = t => t ? `<div class="src">📝 <b>Team fact-check:</b> ${t}</div>` : "";
+const assume = o => o && o.assumption ? `<p class="note">≈ ${o.assumption_note || "Numbers here are simplified game assumptions."}</p>` : "";
+const enterKey = `<span class="key">or press <kbd>Enter</kbd></span>`;
+const sourcesHtml = c => c.sources && c.sources.length ? `<details class="sources"><summary>Sources for documented facts (${c.sources.length})</summary><ul>${c.sources.map(x => `<li>${x}</li>`).join("")}</ul></details>` : "";
+const conceptHtml = c => { const k = c.concept; return k ? `<div class="concept"><small>📘 Course concept</small><h3>${k.name}</h3>
+  <p>${k.text} <span class="chipt doc">documented</span></p>${k.game_note ? `<p>${k.game_note} <span class="chipt asm">≈ game assumption</span></p>` : ""}</div>${src(k.source_note)}` : ""; };
+/* "What happens next" picture, drawn from an option's outcome: { bg, art, sticker, roof } */
+function outcomeArt(o, good) {
+  if (!o) return "";
+  const W = 400, H = 112, col = good ? "#16a34a" : "#dc2626", art = o.art || [];
+  let back = "", rowY = 94, size = 40, sy = 22;
+  const city = (sky, bld, ground) => { let x = 0, k = 0, r = ""; while (x < W) { const w = 22 + (k * 37 % 23), h = 26 + (k * 53 % 44); r += `<rect x="${x}" y="${88 - h}" width="${w - 3}" height="${h}" fill="${bld}"/>`; x += w; k++; }
+    return `<rect width="${W}" height="${H}" fill="${sky}"/>${r}<rect y="88" width="${W}" height="24" fill="${ground}"/>`; };
+  if (o.bg === "home") back = `<rect width="${W}" height="${H}" fill="#2b3556"/><rect y="88" width="${W}" height="24" fill="#6b4f3a"/>
+    <rect x="22" y="14" width="64" height="48" rx="4" fill="#7dd3fc" stroke="#e2e8f0" stroke-width="3"/><path d="M54 14v48M22 38h64" stroke="#e2e8f0" stroke-width="3"/>`;
+  else if (o.bg === "bins") back = `${city("#17324f", "#102540", "#3a4756")}<rect x="14" y="30" width="372" height="9" rx="3" fill="#2f8f7b"/><path d="M22 39v49M378 39v49" stroke="#2f8f7b" stroke-width="4"/>
+    ${[["#eab308", 60], ["#3b82f6", 170], ["#94a3b8", 280]].map(b => `<rect x="${b[1]}" y="50" width="60" height="40" rx="5" fill="${b[0]}" opacity=".55"/><rect x="${b[1] - 3}" y="46" width="66" height="7" rx="3" fill="${b[0]}" opacity=".8"/>`).join("")}`;
+  else if (o.bg === "snow") back = `${city("#2a4868", "#1a3350", "#e6eff5")}${Array.from({ length: 26 }, (_, i) => `<circle cx="${(i * 67) % W}" cy="${(i * 29) % 84}" r="1.8" fill="#fff" opacity=".8"/>`).join("")}`;
+  else if (o.bg === "roof") { rowY = 40; size = 30; sy = 88;
+    const rc = o.roof === "white" ? "#f8fafc" : "#1f2937";
+    back = `<rect width="${W}" height="${H}" fill="#7c4a1e"/><rect width="${W}" height="${H}" fill="#f59e0b" opacity=".35"/><rect x="110" y="60" width="180" height="52" fill="#475569"/>
+      <rect x="100" y="50" width="200" height="12" rx="2" fill="${rc}" stroke="#0f172a" stroke-width="1.5"/>${[130, 175, 220, 255].map(x => `<rect x="${x}" y="70" width="16" height="14" fill="#cbd5e1" opacity=".5"/>`).join("")}`; }
+  else back = `${city("#17324f", "#102540", "#3a4756")}<path d="M0 101h${W}" stroke="#e2e8f0" stroke-width="2" stroke-dasharray="14 12" opacity=".5"/>`;
+  const actors = art.map((e, i) => `<text x="${(W * (i + 1) / (art.length + 1)).toFixed(0)}" y="${rowY}" font-size="${size}" text-anchor="middle">${e}</text>`).join("");
+  const label = (good ? "✓ " : "✕ ") + (o.sticker || ""), sw = Math.min(300, 30 + label.length * 7.3), sx = o.bg === "roof" ? W / 2 : W - 12 - sw / 2;
+  const sticker = o.sticker ? `<g transform="rotate(-3 ${sx} ${sy})"><rect x="${sx - sw / 2}" y="${sy - 13}" width="${sw}" height="26" rx="6" fill="${col}" stroke="#fff" stroke-width="2"/>
+    <text x="${sx}" y="${sy + 4.5}" font-size="12.5" font-weight="800" fill="#fff" text-anchor="middle" font-family="system-ui,sans-serif">${label}</text></g>` : "";
+  return `<figure class="outcome${good ? " good" : ""}"><figcaption>What happens next</figcaption>
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${(o.sticker || "").replace(/"/g, "&quot;")}">${back}${actors}${sticker}</svg></figure>`;
+}
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+const optsHtml = (options, act, wrong = []) => `<div class="opts">${shuffle(options.map((_, i) => i)).map((oi, k) =>
+  `<button class="opt" data-act="${act}" data-i="${oi}" ${wrong.includes(oi) ? "disabled" : ""}><span class="n">${k + 1}</span><span>${options[oi].text}</span></button>`).join("")}</div>`;
+
+/* ---------- country flow ---------- */
+function openCountry(id) {
+  cur = byId[id]; const s = state.c[id];
+  document.documentElement.style.setProperty("--accent", cur.accent);
+  show("stage");
+  if (s.done) renderSummary();
+  else if (!s.started) renderIntro();
+  else if (s.q < cur.questions.length) renderQuestion();
+  else renderReplay();
+}
+function renderIntro() {
+  const c = cur, i = c.intro;
+  setStage(`${banner(c)}<div class="body">
+    <div class="kicker">${c.flag} ${c.name} · ${c.city}</div>
+    <h2>${i.title}</h2><p class="lead">${i.scene}</p>
+    <div class="box"><h4>The system here: ${i.policy_name}</h4>${i.policy}</div>
+    ${src(i.source_note)}
+    <div class="actions"><button class="btn" data-primary data-act="begin">Begin · ${c.questions.length} decisions + a replay</button>${enterKey}</div></div>`);
+}
+function renderQuestion() {
+  const c = cur, s = state.c[c.id], q = c.questions[s.q], n = c.questions.length;
+  setStage(`${banner(c, true)}<div class="body">
+    <div class="kicker">Decision ${s.q + 1} of ${n} <span class="dots">${c.questions.map((_, k) => `<i class="${k <= s.q ? "on" : ""}"></i>`).join("")}</span>
+      ${s.tried ? `<span class="retry">Second try · worth +50</span>` : ""}</div>
+    <p class="situation">${q.situation}</p><h2>${q.prompt}</h2>
+    ${optsHtml(q.options, "ans", s.wrong)}
+    ${assume(q)}<p class="note">Press <kbd>1</kbd>–<kbd>${q.options.length}</kbd> to choose.</p></div>`);
+}
+function answer(i) {
+  const c = cur, s = state.c[c.id], q = c.questions[s.q], o = q.options[i];
+  if (!o) return;
+  if (o.correct) {
+    const first = !s.tried, pts = first ? 100 : 50;
+    s.pts += pts; s.q++; s.tried = false; s.wrong = [];
+    addScore(pts);
+    setStage(`${banner(c, true)}<div class="body">
+      <div class="ribbon good">✅ Why this is better <span class="pts">+${pts}</span></div>
+      <p class="pick">Your choice: <b>${o.text}</b></p>
+      ${outcomeArt(o.outcome, true)}
+      <div class="box"><h4>The environmental benefit</h4>${q.benefit}</div>
+      ${first ? `<div class="box"><h4>How it works in ${c.name}</h4>${q.system}</div>` : ""}
+      ${assume(q)}${src(q.source_note)}${sourcesHtml(c)}
+      <div class="actions"><button class="btn" data-primary data-act="next">${s.q < c.questions.length ? "Next decision" : "On to the replay round 🔁"}</button>${enterKey}</div></div>`);
+  } else {
+    s.tried = true; if (!s.wrong.includes(i)) s.wrong.push(i); save();
+    setStage(`${banner(c, true)}<div class="body">
+      <div class="ribbon learn">💡 Here's how it works in ${c.name}</div>
+      <p class="pick">Your choice: <b>${o.text}</b></p>
+      ${outcomeArt(o.outcome, false)}
+      ${o.why_not ? `<p class="pick">${o.why_not}</p>` : ""}
+      <div class="box"><h4>The local system</h4>${q.system}</div>
+      ${assume(q)}${src(q.source_note)}${sourcesHtml(c)}
+      <div class="actions"><button class="btn" data-primary data-act="retry">Try the question again</button>${enterKey}</div></div>`);
+  }
+}
+
+/* ---------- replay round ---------- */
+function visualHtml(v) {
+  const side = (which, title) => {
+    let inner = "";
+    if (v.type === "streams") {
+      let bad = 0, k = 0;
+      inner = `<div class="bins">${v.streams.map(st => `<div class="bin"><b>${st.label}</b>${v.items.filter(it => it[which] === st.id).map(it => {
+        const wrong = it[which] !== it.correct; if (wrong) bad++;
+        return `<span class="item${wrong ? " bad" : ""}" style="animation-delay:${(k++ * 0.09).toFixed(2)}s" title="${it.name}${wrong ? " (wrong stream)" : ""}"><span>${it.icon}</span><small>${it.name}</small></span>`;
+      }).join("")}</div>`).join("")}</div>
+      <div class="tally ${bad ? "no" : "ok"}">${bad ? `✕ ${bad} item${bad > 1 ? "s" : ""} in the wrong stream` : "✓ Everything in the right stream"}</div>`;
+    } else {
+      inner = v.groups.map(g => {
+        const mx = Math.max(...g.rows.flatMap(r => [r.before.v, r.after.v]), 1);
+        return `<div class="grp"><b>${g.title}</b>${g.rows.map(r => { const d = r[which]; return `<div class="row">
+          <div class="lab"><span>${r.label}</span><em>${r.assumption ? "≈ " : ""}${d.text != null ? d.text : d.v}</em></div>
+          <div class="bar"><i data-w="${Math.max(3, d.v / mx * 100).toFixed(1)}"></i></div>
+          ${d.tag ? `<span class="vt ${d.good ? "ok" : "no"}">${d.good ? "✓" : "✕"} ${d.tag}</span>` : ""}</div>`; }).join("")}</div>`;
+      }).join("");
+    }
+    return `<div class="side ${which}${which === "after" ? " locked" : ""}"><h4><span>${which}</span>${title}</h4><div class="inner" data-html="${which}">${which === "after" ? "" : inner}</div>
+      <div class="lock">❓<br>Make your prediction to reveal</div><template>${inner}</template></div>`;
+  };
+  return `<div class="cmp">${side("before", v.before_title)}${side("after", v.after_title)}</div>`;
+}
+const growBars = root => requestAnimationFrame(() => requestAnimationFrame(() => $$(".bar i", root).forEach(b => b.style.width = b.dataset.w + "%")));
+function revealAfter() {
+  const a = $(".side.after", stage); if (!a) return;
+  $(".inner", a).innerHTML = $("template", a).innerHTML; a.classList.remove("locked"); growBars(a);
+}
+const chainHtml = ch => `<div class="chain">
+  <div><small>What changed in the system</small>${ch.changed}</div><div class="arr">→</div>
+  <div><small>How it changed the choice</small>${ch.choice}</div><div class="arr">→</div>
+  <div><small>The environmental effect</small>${ch.effect}</div></div>`;
+function renderReplay() {
+  const c = cur, r = c.replay;
+  setStage(`${banner(c, true)}<div class="body">
+    <div class="kicker">🔁 Replay round · change one thing in the system</div>
+    <h2>${r.title}</h2><p>${r.recap}</p>
+    <div class="change"><b>The one change:</b> ${r.change}</div>
+    ${visualHtml(r.visual)}
+    <div id="rq">${r.question
+      ? `<h3>${r.question.prompt}</h3>${optsHtml(r.question.options, "rans")}<p class="note">Any answer reveals the comparison · +50 for completing the replay.</p>`
+      : `<div class="actions"><button class="btn" data-primary data-act="rans" data-i="-1">Reveal what changes</button>${enterKey}</div>`}</div></div>`);
+  growBars($(".side.before", stage));
+}
+function answerReplay(i) {
+  const c = cur, s = state.c[c.id], r = c.replay;
+  if (s.done) return;
+  const o = r.question ? r.question.options[i] : null, right = r.question && r.question.options.find(x => x.correct);
+  s.done = true;
+  if (r.question) { s.pts += 50; addScore(50); } else save();
+  revealAfter();
+  $("#rq").innerHTML = `
+    ${o ? `<div class="ribbon ${o.correct ? "good" : "learn"}">${o.correct ? "✅ Good prediction!" : "💡 Not quite. Here is what happens:"} <span class="pts">+50</span></div>
+    <p class="pick">${o.correct ? "" : `You predicted: <b>${o.text}</b><br>`}What happens: <b>${right.text}</b></p>` : ""}
+    ${chainHtml(r.chain)}${assume(r)}${src(r.source_note)}
+    <div class="actions"><button class="btn" data-primary data-act="summary">See ${c.name} summary</button>${enterKey}</div>`;
+  updateHud();
+  const p = $("[data-primary]", stage); if (p) p.focus({ preventScroll: true });
+  const cmp = $(".cmp", stage); if (cmp && cmp.scrollIntoView) cmp.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function renderSummary() {
+  const c = cur, s = state.c[c.id], all = doneCount() === C.length;
+  setStage(`${banner(c, true)}<div class="body">
+    <div class="kicker">${c.flag} ${c.name} complete ✓</div>
+    <div class="big">${s.pts} <small>/ ${maxFor(c)} points earned in ${c.city}</small></div>
+    ${conceptHtml(c)}
+    <div class="idea"><small>💡 Idea worth borrowing</small>${c.summary.idea}</div>
+    ${sourcesHtml(c)}
+    <div class="actions">${all
+      ? `<button class="btn" data-primary data-act="final">See final results 🏁</button><button class="btn ghost" data-act="globe">Back to the globe</button>`
+      : `<button class="btn" data-primary data-act="globe">Back to the globe 🌍</button>`}${enterKey}</div></div>`);
+}
+stage.addEventListener("click", e => {
+  const b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
+  const a = b.dataset.act, s = cur && state.c[cur.id];
+  if (a === "begin") { s.started = true; save(); renderQuestion(); }
+  else if (a === "ans") answer(+b.dataset.i);
+  else if (a === "retry") renderQuestion();
+  else if (a === "next") (s.q < cur.questions.length ? renderQuestion : renderReplay)();
+  else if (a === "rans") answerReplay(+b.dataset.i);
+  else if (a === "summary") renderSummary();
+  else if (a === "globe") show("globe");
+  else if (a === "final") renderFinal();
+});
+
+/* ---------- final ---------- */
+function renderFinal() {
+  const pct = state.score / MAX * 100;
+  const rank = M.ranks.filter(r => pct >= r.min_pct).pop() || M.ranks[0];
+  $("#final").innerHTML = `
+    <div class="kicker" style="justify-content:center;color:var(--teal)">Journey complete</div>
+    <div class="big" style="color:var(--teal)"><span id="fs">0</span> <small>/ ${MAX}</small></div>
+    <div class="rank">🏅 ${rank.title}</div>
+    <ul class="takes">${C.map(c => `<li style="--c:${c.accent}"><span>${c.flag}</span><div>${c.takeaway}</div></li>`).join("")}</ul>
+    <p class="home">${M.take_home}</p>
+    <div class="btnrow"><button class="btn" data-primary id="again" style="--accent:#2dd4bf">Play again</button></div>
+    <p class="credits">${M.credits}</p>`;
+  $("#again").onclick = () => { state = fresh(); wipe(); renderTitle(); show("title"); };
+  show("final");
+  const el = $("#fs"), t0 = performance.now(), to = state.score;
+  (function tick(t) { const p = Math.min(1, (t - t0) / 1200); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(tick); })(t0);
+  $("#again").focus({ preventScroll: true });
+}
+
+/* ---------- globe ---------- */
+function renderChips() {
+  $("#chips").innerHTML = C.map((c, k) => `<button class="chip" style="--c:${c.accent}" data-c="${c.id}">${c.flag} ${c.name} <small>${c.topic}</small>${state.c[c.id].done ? `<span class="ck">✓</span>` : ""}</button>`).join("");
+}
+$("#chips").addEventListener("click", e => { const b = e.target.closest("[data-c]"); if (b) Globe.select(b.dataset.c); });
+
+const Globe = (() => {
+  const cv = $("#globe"), ctx = cv.getContext("2d"), tip = $("#tip"), D = Math.PI / 180;
+  const S = { lon: 95, lat: 18, k: 1, mode: "loading", anim: null, drag: null, last: 0, hover: null, pins: [], run: false, land: null, borders: null, feats: {}, proj: null, path: null, t: 0 };
+  let W = 0, H = 0, dpr = 1, cx = 0, cy = 0, R = 1;
+  const stars = Array.from({ length: 170 }, () => ({ x: Math.random(), y: Math.random(), r: Math.random() * 1.3 + 0.3, a: Math.random() * 0.6 + 0.2 }));
+
+  /* Fallback land: coarse lat/lon boxes drawn as a dot matrix (used only if the map data cannot load). */
+  const BOXES = [[50,70,-165,-60],[30,50,-125,-70],[15,30,-112,-85],[8,18,-92,-78],[60,82,-55,-22],[-5,11,-80,-50],[-20,-5,-78,-36],[-35,-20,-71,-42],[-55,-35,-74,-64],
+    [36,60,-9,40],[55,70,6,40],[50,58,-7,1],[15,36,-16,34],[4,15,-15,48],[-12,4,10,41],[-34,-12,13,37],[-25,-13,44,50],[50,74,40,178],[22,50,60,122],[35,50,40,60],[13,31,35,58],
+    [8,22,70,87],[10,22,93,108],[31,43,130,142],[34,42,125,129],[-8,5,96,140],[-38,-12,114,152],[-46,-35,167,178],[-84,-70,-180,180]];
+  const DOTS = [];
+  for (let la = -84; la <= 82; la += 3) { const step = 3 / Math.max(0.25, Math.cos(la * D)); for (let lo = -180; lo < 180; lo += step) if (BOXES.some(b => la >= b[0] && la <= b[1] && lo >= b[2] && lo <= b[3])) DOTS.push([la, lo]); }
+
+  function resize() {
+    const r = cv.getBoundingClientRect(); if (!r.width) return;
+    dpr = Math.min(window.devicePixelRatio || 1, 2); W = r.width; H = r.height;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cx = W / 2; cy = H * 0.48;
+  }
+  function project(lat, lon) {
+    const l = (lon - S.lon) * D, p = lat * D, p0 = S.lat * D, cp = Math.cos(p);
+    return { x: cx + R * cp * Math.sin(l), y: cy - R * (Math.cos(p0) * Math.sin(p) - Math.sin(p0) * cp * Math.cos(l)), z: Math.sin(p0) * Math.sin(p) + Math.cos(p0) * cp * Math.cos(l) };
+  }
+  function line(pts) { let pen = false; for (const [la, lo] of pts) { const q = project(la, lo); if (q.z > 0) { pen ? ctx.lineTo(q.x, q.y) : ctx.moveTo(q.x, q.y); pen = true; } else pen = false; } }
+
+  function draw(now) {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    R = Math.min(W * 0.44, H * 0.34) * S.k;
+    for (const s of stars) { ctx.globalAlpha = s.a; ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(s.x * W, s.y * H, s.r, 0, 7); ctx.fill(); }
+    ctx.globalAlpha = 1;
+    let g = ctx.createRadialGradient(cx, cy, R * 0.9, cx, cy, R * 1.28);
+    g.addColorStop(0, "rgba(45,212,191,.42)"); g.addColorStop(1, "rgba(45,212,191,0)");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R * 1.28, 0, 7); ctx.fill();
+    g = ctx.createRadialGradient(cx - R * 0.35, cy - R * 0.35, R * 0.1, cx, cy, R);
+    g.addColorStop(0, "#1c5a8a"); g.addColorStop(0.6, "#0d2f57"); g.addColorStop(1, "#081a36");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill();
+
+    ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.clip();
+    ctx.strokeStyle = "rgba(255,255,255,.08)"; ctx.lineWidth = 1; ctx.beginPath();
+    for (let lo = -180; lo < 180; lo += 30) { const a = []; for (let la = -90; la <= 90; la += 6) a.push([la, lo]); line(a); }
+    for (let la = -60; la <= 60; la += 30) { const a = []; for (let lo = -180; lo <= 180; lo += 6) a.push([la, lo]); line(a); }
+    ctx.stroke();
+    if (S.mode === "map") {
+      S.proj.rotate([-S.lon, -S.lat]).translate([cx, cy]).scale(R);
+      ctx.fillStyle = "#1f8a73"; ctx.beginPath(); S.path(S.land); ctx.fill();
+      ctx.strokeStyle = "rgba(4,10,23,.45)"; ctx.lineWidth = 0.6; ctx.beginPath(); S.path(S.borders); ctx.stroke();
+      for (const c of C) { const f = S.feats[c.id]; if (!f) continue;
+        ctx.globalAlpha = S.hover === c.id ? 1 : 0.82; ctx.fillStyle = state.c[c.id].done ? "#4ade80" : c.accent; ctx.beginPath(); S.path(f); ctx.fill();
+        ctx.globalAlpha = 1; ctx.strokeStyle = "#ffffffaa"; ctx.lineWidth = 1; ctx.stroke(); }
+    } else if (S.mode === "dots") {
+      ctx.fillStyle = "#2aa58a";
+      for (const d of DOTS) { const q = project(d[0], d[1]); if (q.z > 0.02) { const r = R * 0.013 * (0.45 + 0.55 * q.z); ctx.beginPath(); ctx.arc(q.x, q.y, r, 0, 7); ctx.fill(); } }
+    }
+    g = ctx.createRadialGradient(cx - R * 0.4, cy - R * 0.4, R * 0.25, cx, cy, R * 1.05);
+    g.addColorStop(0, "rgba(255,255,255,.07)"); g.addColorStop(0.55, "rgba(0,0,0,0)"); g.addColorStop(1, "rgba(0,0,12,.62)");
+    ctx.fillStyle = g; ctx.fillRect(cx - R, cy - R, R * 2, R * 2);
+    ctx.restore();
+
+    /* pins */
+    const u = Math.max(0.85, Math.min(1.5, Math.min(W, H) / 620)), phase = (now % 1600) / 1600;
+    S.pins = [];
+    for (const c of C) for (const p of c.pins) {
+      const q = project(p.lat, p.lon); if (q.z < 0.08) continue;
+      const done = state.c[c.id].done, col = done ? "#4ade80" : c.accent, r = 9 * u, hot = S.hover === c.id;
+      S.pins.push({ id: c.id, x: q.x, y: q.y });
+      ctx.strokeStyle = col; ctx.lineWidth = 2.5; ctx.globalAlpha = 1 - phase; ctx.beginPath(); ctx.arc(q.x, q.y, r + phase * 20 * u, 0, 7); ctx.stroke(); ctx.globalAlpha = 1;
+      ctx.shadowColor = col; ctx.shadowBlur = hot ? 30 : 18; ctx.fillStyle = col; ctx.beginPath(); ctx.arc(q.x, q.y, hot ? r * 1.25 : r, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
+      ctx.strokeStyle = "#fff"; ctx.lineWidth = 2.5; ctx.stroke();
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      if (done) { ctx.fillStyle = "#04201c"; ctx.font = `800 ${13 * u}px system-ui,sans-serif`; ctx.fillText("✓", q.x, q.y + 1); }
+      ctx.font = `700 ${13.5 * u}px system-ui,sans-serif`;
+      const txt = p.label + (done ? " ✓" : ""), tw = ctx.measureText(txt).width + 16 * u, th = 22 * u, ty = q.y + r + 8 * u + th / 2;
+      ctx.fillStyle = "rgba(4,10,23,.82)"; ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(q.x - tw / 2, ty - th / 2, tw, th, th / 2); else ctx.rect(q.x - tw / 2, ty - th / 2, tw, th);
+      ctx.fill(); ctx.fillStyle = "#fff"; ctx.fillText(txt, q.x, ty + 0.5);
+    }
+  }
+
+  function frame(now) {
+    if (!S.run) return;
+    const dt = Math.min(60, now - (S.t || now)); S.t = now;
+    if (S.anim) {
+      const a = S.anim, p = Math.min(1, (now - a.t0) / a.dur), e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+      S.lon = a.f.lon + a.dl * e; S.lat = a.f.lat + (a.to.lat - a.f.lat) * e; S.k = a.f.k + (a.to.k - a.f.k) * e;
+      if (p >= 1) { S.anim = null; S.last = now; if (a.cb) a.cb(); }
+    } else if (!S.drag && !S.hover && now - S.last > 2500) S.lon += dt * 0.005;
+    S.lon = ((S.lon + 540) % 360) - 180;
+    draw(now);
+    requestAnimationFrame(frame);
+  }
+  function fly(lat, lon, k, dur, cb) {
+    S.anim = { f: { lon: S.lon, lat: S.lat, k: S.k }, to: { lat, k }, dl: ((lon - S.lon + 540) % 360) - 180, t0: performance.now(), dur, cb };
+  }
+  function select(id) {
+    if (S.anim && S.anim.cb) return;
+    const c = byId[id]; if (!c) return;
+    setTip(null);
+    if (!S.run) return openCountry(id);
+    fly(c.focus.lat, c.focus.lon, 1.75, 1100, () => openCountry(id));
+  }
+  function pinAt(x, y, rad) { let best = null, bd = rad * rad; for (const p of S.pins) { const d = (p.x - x) ** 2 + (p.y - y) ** 2; if (d < bd) { bd = d; best = p; } } return best; }
+  function countryAt(x, y) {
+    if (S.mode !== "map" || !window.d3) return null;
+    if ((x - cx) ** 2 + (y - cy) ** 2 > R * R) return null;
+    const ll = S.proj.invert([x, y]); if (!ll) return null;
+    for (const c of C) if (S.feats[c.id] && d3.geoContains(S.feats[c.id], ll)) return c.id;
+    return null;
+  }
+  function setTip(id, x, y) {
+    S.hover = id; cv.classList.toggle("point", !!id);
+    if (!id) return tip.classList.remove("on");
+    const c = byId[id], d = state.c[id].done;
+    tip.innerHTML = `<b>${c.flag} ${c.name}</b><span>${c.city} · ${c.topic}${d ? " · ✓ completed" : ""}</span>`;
+    tip.style.left = Math.max(120, Math.min(W - 120, x)) + "px"; tip.style.top = Math.max(120, y) + "px"; tip.classList.add("on");
+  }
+  const pos = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  cv.addEventListener("pointerdown", e => {
+    const [x, y] = pos(e); S.drag = { x, y, lon: S.lon, lat: S.lat, moved: 0 }; S.last = performance.now();
+    try { cv.setPointerCapture(e.pointerId); } catch (err) {}
+  });
+  cv.addEventListener("pointermove", e => {
+    const [x, y] = pos(e);
+    if (S.drag) {
+      const dx = x - S.drag.x, dy = y - S.drag.y; S.drag.moved = Math.max(S.drag.moved, Math.hypot(dx, dy));
+      if (S.drag.moved > 6 && !S.anim) { const deg = 180 / (Math.PI * R); S.lon = S.drag.lon - dx * deg; S.lat = Math.max(-75, Math.min(75, S.drag.lat + dy * deg)); cv.classList.add("grab"); setTip(null); }
+      S.last = performance.now();
+    } else if (e.pointerType !== "touch" && !S.anim) {
+      const p = pinAt(x, y, 26); if (p) setTip(p.id, p.x, p.y); else { const id = countryAt(x, y); id ? setTip(id, x, y) : setTip(null); }
+    }
+  });
+  const up = e => {
+    const d = S.drag; S.drag = null; cv.classList.remove("grab"); S.last = performance.now();
+    if (!d || e.type === "pointercancel" || d.moved > 8) return;
+    const [x, y] = pos(e), p = pinAt(x, y, e.pointerType === "touch" ? 36 : 26), id = p ? p.id : countryAt(x, y);
+    if (id) select(id);
+  };
+  cv.addEventListener("pointerup", up); cv.addEventListener("pointercancel", up);
+  cv.addEventListener("pointerleave", () => { if (!S.drag) setTip(null); });
+  window.addEventListener("resize", resize);
+
+  /* Map data from CDN. If anything fails or is slow, the dot-matrix globe is used instead. */
+  const lib = src => new Promise((ok, no) => { const s = document.createElement("script"); s.src = src; s.async = true; s.onload = ok; s.onerror = () => no(new Error("blocked")); document.head.appendChild(s); });
+  setTimeout(() => { if (S.mode === "loading") S.mode = "dots"; }, 4000);
+  Promise.all([lib("https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"), lib("https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js")])
+    .then(() => fetch("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json"))
+    .then(r => { if (!r.ok) throw new Error("no map"); return r.json(); })
+    .then(w => {
+      const ISO = { kr: 410, br: 76, ca: 124, in: 356 };
+      const fc = topojson.feature(w, w.objects.countries);
+      S.land = topojson.feature(w, w.objects.land);
+      S.borders = topojson.mesh(w, w.objects.countries, (a, b) => a !== b);
+      for (const c of C) S.feats[c.id] = fc.features.find(f => +f.id === ISO[c.id]);
+      S.proj = d3.geoOrthographic().clipAngle(90).precision(0.4); S.path = d3.geoPath(S.proj, ctx);
+      S.mode = "map";
+    })
+    .catch(() => { if (S.mode !== "map") S.mode = "dots"; });
+
+  return {
+    select,
+    start() { resize(); if (S.k > 1.01) fly(S.lat, S.lon, 1, 800); S.last = performance.now() - 1500; if (!S.run) { S.run = true; S.t = 0; requestAnimationFrame(frame); } },
+    stop() { S.run = false; S.anim = null; setTip(null); }
+  };
+})();
+
+/* ---------- HUD buttons + keyboard ---------- */
+$("#b-globe").onclick = () => show("globe");
+$("#finish").onclick = () => { if (doneCount() === C.length) renderFinal(); };
+const toggleNotes = () => { const on = document.body.classList.toggle("notes"); $("#b-notes").setAttribute("aria-pressed", on); };
+$("#b-notes").onclick = toggleNotes;
+function toggleFull() {
+  try {
+    const d = document, el = d.documentElement;
+    if (d.fullscreenElement || d.webkitFullscreenElement) (d.exitFullscreen || d.webkitExitFullscreen).call(d);
+    else { const p = (el.requestFullscreen || el.webkitRequestFullscreen).call(el); if (p && p.catch) p.catch(() => {}); }
+  } catch (e) { /* fullscreen not supported: ignore */ }
+}
+$("#b-full").onclick = toggleFull;
+document.addEventListener("keydown", e => {
+  if (e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key >= "1" && e.key <= "4") {
+    const list = screen === "stage" ? $$(".opt", stage) : screen === "globe" ? $$(".chip") : [], b = list[+e.key - 1];
+    if (b && !b.disabled) b.click();
+  } else if (e.key === "Enter") {
+    const a = document.activeElement; if (a && a.tagName === "BUTTON") return; // the browser clicks it for us
+    const p = $(".screen.active [data-primary]"); if (p && !p.disabled) { e.preventDefault(); p.click(); }
+  } else if (e.key === "n" || e.key === "N") toggleNotes();
+  else if (e.key === "f" || e.key === "F") toggleFull();
+});
+
+renderTitle();
+show("title");
+})();
+</script>
+</body>
+</html>
